@@ -6,9 +6,15 @@ app_name = 'blog'
 urlpatterns = [
     # path('', views.post_list, name='post_list'),
     # path('tag/<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),
+    
+    
+    
     path('', views.PostListView.as_view(), name='post_list'),
     path('tag/<slug:tag_slug>/', views.PostListView.as_view(), name='post_list_by_tag'),
     path('post/<int:pk>-<slug:slug>/', views.PostDetailView.as_view(), name='post_detail'),   
+
+    # percobaan buat reference
+    path('reference/', views.PostReference.as_view(), name='post_reference'),
 
     path('<int:year>/<int:month>/<int:day>/<slug:post>/', views.post_detail, name='post_detail'),
     path('<int:post_id>/share/', views.post_share, name='post_share'),
@@ -22,3 +28,6 @@ urlpatterns = [
     path('post/<int:pk>-<slug:slug>/update/', views.PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>-<slug:slug>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
 ]
+
+
+

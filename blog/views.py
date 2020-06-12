@@ -221,3 +221,60 @@ class PostDeleteView(LoginRequiredMixin,DeleteView):
         return qs.filter(author = self.request.user)
 
 
+# Percobaan bikin reference
+# @login_required
+def post_reference(request, tag_slug=None):
+    # posts = Post.published.all()
+
+    object_list = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
+
+    paginator = Paginator(object_list, 3)
+    page = request.GET.get('page')
+
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    # cek di terminal
+    print('tag: ', tag)
+
+    return render(request, 'blog/post/reference.html', 
+                {'page' : page, 'posts': pages, 'tag': tag})
+
+
+class PostReference(LoginRequiredMixin, ListView):
+    queryset = Post.published.all()
+    # queryset = Post.objects.all()
+    context_object_name = 'posts'
+    # context_object_name = 'references'
+    paginate_by = 3
+    template_name = 'blog/post/reference.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        tag_slug = self.kwargs.get('tag_slug')
+
+        if tag_slug:
+            tag = get_object_or_404(Tag, slug=tag_slug)
+            qs=qs.filter(tags__in=[tag])
+            self.tag = tag
+        else:
+            self.tag = None
+        
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.tag:
+            context['tag'] = self.tag
+
+        return context
+

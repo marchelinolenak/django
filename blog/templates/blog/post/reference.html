@@ -5,42 +5,36 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>My Blog</h1>
-    
-    {% if tag %}
-        <h2>Posts tagged with "{{tag.name}}"</h2>
-    {% endif %}
+    <h1>Reference</h1>
         
     {% for post in posts %}
         <h2>
             <a href="{{post.get_absolute_url}}">
                 {{post.title}}
             </a>
+            <h5>
+                {{ post.body|markdown|truncatewords_html:100 }}
+                <!-- Test Keterangan Test Keterangan Test Keterangan Test Keterangan Test Keterangan  -->
+            </h5>
         </h2>
-        <p class="tags">
-            <!-- Tags : {{post.tags.all|join:', '}} -->
-            Tags :
-            
-            {% for tag in post.tags.all %}
-                <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-                    {{tag.name}}
-                </a>
-                
-                {% if not forloop.last %}, {% endif %}
-                    
-            {% endfor %}
-                
+        <p>
+            <a href="{{post.link}}">
+                {{post.link}}
+            </a>
         </p>   
+
         <p class="date">
             Published {{post.publish}} by {{post.author}}
+            <!-- Ini tempat published -->
         </p>
-        <!-- {{post.body|truncatewords:30|linebreaks }} -->
-        {{ post.body|markdown|truncatewords_html:30 }}
         <p>
             {% if post.author == request.user %}
-                <a href="{% url 'blog:post_update' post.id post.slug %}">Update</a>  
+                <a href="{% url 'blog:post_update' post.id post.slug %}">Update</a> | 
                 <a href="{% url 'blog:post_delete' post.id post.slug %}">Delete</a>
             {% endif %}
+        </p>
+        <p>
+            ----------------------------------------------------------------------------------------------------------------------------------------
         </p>
     {% endfor %}
 

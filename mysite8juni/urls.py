@@ -31,6 +31,8 @@ urlpatterns = [
             name='django.contrib.sitemaps.views.sitemap'),
     path('account/', include('account.urls')),
     path('api/', include('blog.api.urls', namespace='api')),
+    path('reference/', include('reference.urls')),
+    path('api_reference/', include('reference.api.urls', namespace='apireferences')),
 ]
 
 if settings.DEBUG:
